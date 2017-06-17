@@ -6,7 +6,7 @@
  * Time: 12:16
  */
 
-$basePath = '/home/elkuku/repos/lilhelpers';
+$basePath = '/home/'.get_current_user().'/repos/lilhelpers';
 $tests    = [];
 
 function formatDateString($str)
