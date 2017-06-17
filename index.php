@@ -58,7 +58,7 @@ foreach ($tests as $i => $test)
 }
 
 ?>
-<script src="bower_components/chart.js/dist/Chart.bundle.min.js"></script>
+<script src="assets/vendor/chart.js/dist/Chart.bundle.min.js"></script>
 <script>
 
     function drawChart(i, labels, data) {
