@@ -1,0 +1,21 @@
+{
+  "name": "pingtestresult",
+  "authors": [
+    "elkuku <der.el.kuku@gmail.com>"
+  ],
+  "description": "",
+  "main": "",
+  "license": "WTFPL",
+  "homepage": "",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "chart.js": "^2.6.0"
+  }
+}
