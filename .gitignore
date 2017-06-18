@@ -1,3 +1,4 @@
 # Created by .ignore support plugin (hsz.mobi)
 
-assets/vendor
+/assets/vendor
+/vendor/

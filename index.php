@@ -6,6 +6,14 @@
  * Time: 12:16
  */
 
+require_once 'vendor/autoload.php';
+
+$loader = new Twig_Loader_Filesystem('templates');
+
+$twig = new Twig_Environment($loader, array(
+	'cache' => 'cache',
+));
+
 $basePath = '/home/'.get_current_user().'/repos/lilhelpers';
 $tests    = [];
 
@@ -26,12 +34,11 @@ foreach (new DirectoryIterator($basePath) as $iterator)
 
 	if (0 === strpos($iterator->getBasename(), 'pingtest2017'))
 	{
-
 		$date = substr($iterator->getBasename(), 8, 8);
 
 		foreach (file($iterator->getPathname()) as $line)
 		{
-			$parts = explode(' ', $line);
+			$parts = explode(' ', trim($line));
 
 			if (2 === count($parts))
 			{
@@ -39,61 +46,14 @@ foreach (new DirectoryIterator($basePath) as $iterator)
 			}
             elseif (1 == count($parts))
 			{
-				$tests[$date][formatDateString(trim($parts[0]))] = 0;
+				$tests[$date][formatDateString($parts[0])] = 0;
 			}
 		}
 	}
 }
 
 ksort($tests);
-?>
-<html>
-<body>
 
+$tests = array_reverse($tests, true);
 
-<?php
-foreach ($tests as $i => $test)
-{
-	echo '<canvas id="chart-' . $i . '" width="400" height="100"></canvas>';
-}
-
-?>
-<script src="assets/vendor/chart.js/dist/Chart.bundle.min.js"></script>
-<script>
-
-    function drawChart(i, labels, data) {
-        //var ctx = document.getElementById("chart-" + i);
-        new Chart(document.getElementById("chart-" + i), {
-            type: 'line',
-            data: {
-                labels: labels,
-                datasets: [{
-                    label: i,
-                    data: data
-                }]
-            },
-            options: {
-                scales: {
-                    xAxes: [{
-                        type: 'time',
-                        time: {
-                            displayFormats: {
-                                minute: 'h:mm'
-                            }
-                        }
-                    }]
-                }
-            }
-        });
-    }
-	<?php
-	foreach ($tests as $i => $test)
-	{
-		echo "drawChart($i, ['" . implode("','", array_keys($test)) . "'], [" . implode(",", $test) . "]);";
-	}
-
-	?>
-
-</script>
-</body>
-</html>
+echo $twig->render('index.html.twig', array('name' => 'Fabien', 'tests' => $tests));

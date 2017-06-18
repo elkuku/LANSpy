@@ -1,0 +1,15 @@
+{
+  "name": "elkuku/pingtestresult",
+  "description": "ping test results",
+  "minimum-stability": "stable",
+  "license": "WTFPL",
+  "authors": [
+    {
+      "name": "elkuku",
+      "email": "der.el.kuku@gmail.com"
+    }
+  ],
+  "require": {
+    "twig/twig": "^2.0"
+  }
+}
