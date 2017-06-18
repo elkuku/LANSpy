@@ -5,32 +5,8 @@
     <canvas id="chart-{{ date }}" width="400" height="100"></canvas>
 {% endfor %}
 <script src="assets/vendor/chart.js/dist/Chart.bundle.min.js"></script>
+<script src="assets/js/pingtest.js"></script>
 <script>
-    function drawChart(i, labels, data) {
-        new Chart(document.getElementById("chart-" + i), {
-            type: 'line',
-            data: {
-                labels: labels,
-                datasets: [{
-                    label: i,
-                    data: data
-                }]
-            },
-            options: {
-                scales: {
-                    xAxes: [{
-                        type: 'time',
-                        time: {
-                            displayFormats: {
-                                minute: 'h:mm'
-                            }
-                        }
-                    }]
-                }
-            }
-        });
-    }
-
     {% for date, test in tests %}
     drawChart({{ date }}, ['{{ test|keys|join("','")|raw }}'], [{{ test|join(',') }}]);
     {% endfor %}

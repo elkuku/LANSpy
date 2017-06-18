@@ -9,6 +9,11 @@
       "email": "der.el.kuku@gmail.com"
     }
   ],
+  "autoload": {
+    "psr-4": {
+      "": "src/"
+    }
+  },
   "require": {
     "twig/twig": "^2.0",
     "symfony/yaml": "^3.3"
