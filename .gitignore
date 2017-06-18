@@ -2,3 +2,4 @@
 
 /web/assets/vendor/*
 /vendor/
+/etc/config.yml

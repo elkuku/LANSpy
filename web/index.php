@@ -6,7 +6,37 @@
  * Time: 12:16
  */
 
+use Symfony\Component\Yaml\Exception\ParseException;
+use Symfony\Component\Yaml\Yaml;
+
 require_once '../vendor/autoload.php';
+
+$basePath = '';
+$path = '../etc/config.yml';
+
+if (false == file_exists($path))
+{
+	$path = '../etc/config.dist.yml';
+
+	if (false == file_exists($path))
+	{
+		throw new Exception('No config file found');
+	}
+
+}
+
+try {
+	$config = Yaml::parse(file_get_contents($path));
+	//var_dump($config);
+
+	$basePath = $config['root'];
+	if (strpos($basePath, '{user}'))
+	{
+		$basePath = str_replace('{user}', get_current_user(), $basePath);
+	}
+} catch (ParseException $e) {
+	printf("Unable to parse the YAML string: %s", $e->getMessage());
+}
 
 $loader = new Twig_Loader_Filesystem('../templates');
 
@@ -14,7 +44,7 @@ $twig = new Twig_Environment($loader, array(
 	'cache' => '../cache',
 ));
 
-$basePath = '/home/'.get_current_user().'/repos/lilhelpers';
+//$basePath = '/home/'.get_current_user().'/repos/lilhelpers';
 $tests    = [];
 
 function formatDateString($str)
