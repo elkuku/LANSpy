@@ -6,12 +6,12 @@
  * Time: 12:16
  */
 
-require_once 'vendor/autoload.php';
+require_once '../vendor/autoload.php';
 
-$loader = new Twig_Loader_Filesystem('templates');
+$loader = new Twig_Loader_Filesystem('../templates');
 
 $twig = new Twig_Environment($loader, array(
-	'cache' => 'cache',
+	'cache' => '../cache',
 ));
 
 $basePath = '/home/'.get_current_user().'/repos/lilhelpers';
