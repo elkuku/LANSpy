@@ -11,4 +11,4 @@ use Pingtest\Application;
 require_once '../vendor/autoload.php';
 
 echo (new Application(realpath(__DIR__.'/..')))
-	->execute();
+    ->execute();

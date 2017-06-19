@@ -13,103 +13,124 @@ use Symfony\Component\Yaml\Yaml;
 use Twig_Environment;
 use Twig_Loader_Filesystem;
 
+/**
+ * Class Application
+ * @package Pingtest
+ */
 class Application
 {
-	private $root;
-	private $config;
-	private $basePath;
+    private $root;
+    private $config;
+    private $basePath;
 
-	public function __construct($root)
-	{
-		$this->root = $root;
-		$this->readConfig();
+    /**
+     * Application constructor.
+     *
+     * @param string $root
+     */
+    public function __construct(string $root)
+    {
+        $this->root = $root;
+        $this->readConfig();
 
-		$basePath = $this->config['root'];
+        $basePath = $this->config['root'];
 
-		if (strpos($basePath, '{user}'))
-		{
-			$basePath = str_replace('{user}', get_current_user(), $basePath);
-		}
+        if (strpos($basePath, '{user}')) {
+            $basePath = str_replace('{user}', get_current_user(), $basePath);
+        }
 
-		$this->basePath = $basePath;
+        $this->basePath = $basePath;
+    }
 
-	}
-	public function execute()
-	{
-		return (new Twig_Environment(new Twig_Loader_Filesystem($this->root.'/templates')))
-			->render('index.html.twig', ['tests' => $this->readTests()]);
-	}
+    /**
+     * @return string
+     */
+    public function execute(): string
+    {
+        return (new Twig_Environment(new Twig_Loader_Filesystem($this->root.'/templates')))
+            ->render('index.html.twig', ['tests' => $this->readTests(), 'actDate' => (new \DateTime())->format('Ymd')]);
+    }
 
-	private function formatDateString($str)
-	{
-		preg_match_all('/(\d{4})(\d{2})(\d{2})(\d{2})(\d{2})/', $str, $m);
+    /**
+     * @return mixed
+     */
+    public function getConfig()
+    {
+        return $this->config;
+    }
 
-		return $m[1][0] . '-' . $m[2][0] . '-' . $m[3][0] . ' ' . $m[4][0] . ':' . $m[5][0];
-	}
+    /**
+     * @param string $string
+     *
+     * @return string
+     */
+    private function formatDateString(string $string): string
+    {
+        preg_match_all('/(\d{4})(\d{2})(\d{2})(\d{2})(\d{2})/', $string, $m);
 
-	private function readTests()
-	{
-		foreach (new \DirectoryIterator($this->basePath) as $iterator)
-		{
-			if ($iterator->isDir())
-			{
-				continue;
-			}
+        return $m[1][0].'-'.$m[2][0].'-'.$m[3][0].' '.$m[4][0].':'.$m[5][0];
+    }
 
-			if (0 === strpos($iterator->getBasename(), 'pingtest2017'))
-			{
-				$date = substr($iterator->getBasename(), 8, 8);
+    /**
+     * @return array
+     */
+    private function readTests(): array
+    {
+        $tests1 = [];
+        $tests2 = [];
+        foreach (new \DirectoryIterator($this->basePath) as $iterator) {
+            if ($iterator->isDir()) {
+                continue;
+            }
 
-				foreach (file($iterator->getPathname()) as $line)
-				{
-					$parts = explode(' ', trim($line));
+            if (0 === strpos($iterator->getBasename(), 'pingtest2017')) {
+                $date = substr($iterator->getBasename(), 8, 8);
 
-					if (2 === count($parts))
-					{
-						$tests[$date][$this->formatDateString($parts[0])] = intval($parts[1]);
-					}
-					elseif (1 == count($parts))
-					{
-						$tests[$date][$this->formatDateString($parts[0])] = 0;
-					}
-				}
-			}
-		}
+                foreach (file($iterator->getPathname()) as $line) {
+                    $parts = explode(' ', trim($line));
 
-		ksort($tests);
+                    if (3 === count($parts)) {
+                        $tests1[$date][$this->formatDateString($parts[0])] = intval($parts[1]);
+                        $tests2[$date][$this->formatDateString($parts[0])] = intval($parts[2]);
+                    } elseif (2 === count($parts)) {
+                        $tests1[$date][$this->formatDateString($parts[0])] = intval($parts[1]);
+                        $tests2[$date][$this->formatDateString($parts[0])] = 0;
+                    } elseif (1 == count($parts)) {
+                        $tests1[$date][$this->formatDateString($parts[0])] = 0;
+                        $tests2[$date][$this->formatDateString($parts[0])] = 0;
+                    }
+                }
+            }
+        }
 
-		$tests = array_reverse($tests, true);
+        ksort($tests1);
+        ksort($tests2);
 
-		return $tests;
-	}
+        $tests1 = array_reverse($tests1, true);
+        $tests2 = array_reverse($tests2, true);
 
-	/**
-	 * @return mixed
-	 */
-	public function getConfig()
-	{
-		return $this->config;
-	}
+        return [$tests1, $tests2];
+    }
 
-	private function readConfig()
-	{
-		$path = $this->root.'/etc/config.yml';
+    /**
+     * @throws \Exception
+     */
+    private function readConfig()
+    {
+        $path = $this->root.'/etc/config.yml';
 
-		if (false == file_exists($path))
-		{
-			$path = $this->root.'/etc/config.dist.yml';
+        if (false == file_exists($path)) {
+            $path = $this->root.'/etc/config.dist.yml';
 
-			if (false == file_exists($path))
-			{
-				throw new \Exception('No config file found');
-			}
-		}
+            if (false == file_exists($path)) {
+                throw new \Exception('No config file found');
+            }
+        }
 
-		try {
-			$this->config = Yaml::parse(file_get_contents($path));
-
-		} catch (ParseException $e) {
-			printf("Unable to parse the YAML string: %s", $e->getMessage());
-		}
-	}
+        try {
+            $this->config = Yaml::parse(file_get_contents($path));
+        } catch (ParseException $e) {
+            printf("Unable to parse the YAML string: %s", $e->getMessage());
+        }
+    }
 }

@@ -1,14 +1,18 @@
 <html>
+<head>
+    <link rel="stylesheet" type="text/css" href="assets/css/pingtest.css" />
+
+</head>
 <body>
-{% for date, test in tests %}
-    <h2>{{ date }}</h2>
+{% for date, test in tests[0] %}
+    <h2 class="title{{ date == actDate ? ' current' : '' }}">{{ date }}</h2>
     <canvas id="chart-{{ date }}" width="400" height="100"></canvas>
 {% endfor %}
 <script src="assets/vendor/chart.js/dist/Chart.bundle.min.js"></script>
 <script src="assets/js/pingtest.js"></script>
 <script>
-    {% for date, test in tests %}
-    drawChart({{ date }}, ['{{ test|keys|join("','")|raw }}'], [{{ test|join(',') }}]);
+    {% for date, test in tests[0] %}
+    drawChart({{ date }}, ['{{ test|keys|join("','")|raw }}'], [{{ test|join(',') }}], [{{ tests[1][date]|join(',') }}]);
     {% endfor %}
 </script>
 </body>
