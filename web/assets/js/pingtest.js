@@ -1,15 +1,15 @@
 function drawChart(id, labels, data1, data2) {
-    new Chart(document.getElementById("chart-" + id), {
+    new Chart(document.getElementById('chart-' + id), {
         type: 'line',
         data: {
             labels: labels,
             datasets: [
                 {
-                    label: 'Tiempo de respuesta',
+                    label: 'google.com',
                     data: data1
                 },
                 {
-                    label: 'Tiempo de respuesta',
+                    label: 'github.com',
                     data: data2
                 }
             ]
