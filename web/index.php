@@ -7,8 +7,11 @@
  */
 
 use Pingtest\Application;
+use Dbug\BittrDbug;
 
 require_once '../vendor/autoload.php';
+
+new BittrDbug(BittrDbug::PRETTIFY, 'yola', 20);
 
 echo (new Application(realpath(__DIR__.'/..')))
     ->execute();
