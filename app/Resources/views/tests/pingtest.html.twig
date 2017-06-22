@@ -2,6 +2,10 @@
 
 {% block title %}Pingtest{% endblock %}
 
+{% block stylesheets %}
+    <link rel="stylesheet" href="{{ asset('assets/css/pingtest.css') }}">
+{% endblock %}
+
 {% block body %}
     <h1>PingTest Results</h1>
     {% for date, test in tests[0] %}
