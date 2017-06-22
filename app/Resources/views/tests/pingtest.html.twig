@@ -11,3 +11,14 @@
         <h2>No Test found :(</h2>
     {% endfor %}
 {% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script src="{{ asset('assets/vendor/chart.js/dist/Chart.bundle.min.js') }}"></script>
+    <script src="{{ asset('assets/js/pingtest.js') }}"></script>
+    <script>
+        {% for date, test in tests[0] %}
+        drawChart({{ date }}, ['{{ test|keys|join("','")|raw }}'], [{{ test|join(',') }}], [{{ tests[1][date]|join(',') }}]);
+        {% endfor %}
+    </script>
+{% endblock %}

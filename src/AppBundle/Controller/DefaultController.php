@@ -30,7 +30,7 @@ class DefaultController extends Controller
         return $this->render('tests/pingtest.html.twig', [
             'base_dir' => realpath($this->getParameter('kernel.project_dir')).DIRECTORY_SEPARATOR,
             'hello' => $pingtest->hello(),
-
+            'tests' => $pingtest->readTests(), 'actDate' => (new \DateTime())->format('Ymd')
         ]);
     }
 }
