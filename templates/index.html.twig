@@ -6,7 +6,7 @@
 <body>
 <h1>PingTest Results</h1>
 {% for date, test in tests[0] %}
-    <h2 class="title{{ date == actDate ? ' current' : '' }}">{{ date }}</h2>
+    <h2 class="title{{ date == actDate ? ' current' : '' }}">{{ date|cDate }}</h2>
     <canvas id="chart-{{ date }}" width="400" height="100"></canvas>
 {% else %}
     <h2>No Test found :(</h2>

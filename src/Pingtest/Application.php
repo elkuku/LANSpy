@@ -11,6 +11,7 @@ namespace Pingtest;
 use Symfony\Component\Yaml\Exception\ParseException;
 use Symfony\Component\Yaml\Yaml;
 use Twig_Environment;
+use Twig_Filter;
 use Twig_Loader_Filesystem;
 
 /**
@@ -47,8 +48,31 @@ class Application
      */
     public function execute(): string
     {
-        return (new Twig_Environment(new Twig_Loader_Filesystem($this->root.'/templates')))
-            ->render('index.html.twig', ['tests' => $this->readTests(), 'actDate' => (new \DateTime())->format('Ymd')]);
+        $twig = new Twig_Environment(new Twig_Loader_Filesystem($this->root.'/templates'));
+
+        $twig->addFilter(
+            new Twig_Filter(
+                'cDate',
+                function ($string) {
+                    // Expected: YYYYMMDD
+                    preg_match('/(\d{4})(\d{2})(\d{2})/', $string, $m);
+                    if (4 != count($m)) {
+                        return $string;
+                    }
+                    $lang = 'es_ES';
+                    $pattern = 'd \'de\' MMMM \'del\' Y';
+                    $formatter = new \IntlDateFormatter($lang, \IntlDateFormatter::LONG, \IntlDateFormatter::LONG);
+                    $formatter->setPattern($pattern);
+
+                    return $formatter->format(new \DateTime(sprintf('%d-%d-%d', $m[1], $m[2], $m[3])));
+                }
+            )
+        );
+
+        return $twig->render(
+            'index.html.twig',
+            ['tests' => $this->readTests(), 'actDate' => (new \DateTime())->format('Ymd')]
+        );
     }
 
     /**
