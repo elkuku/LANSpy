@@ -2,6 +2,7 @@
 
 namespace AppBundle\Controller;
 
+use AppBundle\Service\MapTest;
 use AppBundle\Service\PingTest;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -39,12 +40,16 @@ class DefaultController extends Controller
 
     /**
      * @Route("maptest", name="maptest")
+     * @param MapTest $mapTest
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function maptestAction()
+    public function maptestAction(MapTest $mapTest)
     {
         return $this->render(
             'tests/maptest.html.twig',
             [
+                'tests' => $mapTest->readTests(),
             ]
         );
     }

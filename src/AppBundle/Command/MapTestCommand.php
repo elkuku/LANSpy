@@ -43,15 +43,13 @@ class MapTestCommand extends ContainerAwareCommand
 
         $ipRange = '192.168.'.$parts[2].'.0-255';
 
-        $io->text(sprintf('Starting nmap scan on %s...', $ipRange));
+        //$io->text(sprintf('Starting nmap scan on %s...', $ipRange));
 
         $command = 'nmap -sn '.$ipRange;
 
-//$sa = shell_exec('whoami');
-//var_dump($s);
         $s = shell_exec($command);
 
-        echo $s;
+        //echo $s;
 
         $lines = explode("\n", trim($s));
 
@@ -91,10 +89,23 @@ class MapTestCommand extends ContainerAwareCommand
             }
         }
 
-        echo json_encode($hosts);
+       // echo json_encode($hosts);
         $outputFile = $this->getContainer()->get('kernel')->getProjectDir().'/results/maptest-'.(new \DateTime())->format('Y-m-d').'.txt';
 
+        $response = new \stdClass();
+
+        $response->time = (new \DateTime())->format('H:i');
+        $response->known = [];
+        $response->unknown = $hosts;
+
+        $io->text('write to '.$outputFile);
+
         $fs = new Filesystem();
-        $fs->appendToFile($outputFile, (new \DateTime())->format('H:i-').json_encode($hosts)."\n");
+        $fs->appendToFile($outputFile, json_encode($response)."\n");
+    }
+
+    private function text(string $message)
+    {
+
     }
 }

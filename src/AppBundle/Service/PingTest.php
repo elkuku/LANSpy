@@ -8,19 +8,22 @@
 
 namespace AppBundle\Service;
 
-
+/**
+ * Class PingTest
+ * @package AppBundle\Service
+ */
 class PingTest
 {
     private $root;
 
+    /**
+     * PingTest constructor.
+     *
+     * @param string $root
+     */
     public function __construct(string $root)
     {
         $this->root = $root.'/results';
-
-    }
-    public function hello()
-    {
-        return 'hellio';
     }
 
     /**
