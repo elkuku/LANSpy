@@ -32,3 +32,6 @@ services:
     # add more services, or override services that need manual wiring
     AppBundle\Service\PingTest:
         $root: '%kernel.project_dir%'
+
+    AppBundle\Service\MapTest:
+        $root: '%kernel.project_dir%'
