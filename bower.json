@@ -1,5 +1,5 @@
 {
-  "name": "pingtestresult",
+  "name": "lanspy",
   "authors": [
     "elkuku <der.el.kuku@gmail.com>"
   ],
@@ -16,6 +16,7 @@
     "tests"
   ],
   "dependencies": {
-    "chart.js": "^2.6.0"
+    "chart.js": "^2.6.0",
+    "bootstrap": "^3.3.7"
   }
 }

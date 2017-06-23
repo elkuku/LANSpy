@@ -14,15 +14,15 @@ class AppExtension extends \Twig_Extension
 {
     public function getFunctions()
     {
-        return array(
-            new Twig_Function('cDate', 'generate_lipsum'),
-        );
+        return [
+            new Twig_Function('mapTestToJS', [$this, 'mapTestToJS']),
+        ];
     }
     public function getFilters()
     {
-        return array(
-            new \Twig_SimpleFilter('cDate', array($this, 'dateFilter')),
-        );
+        return [
+            new \Twig_SimpleFilter('cDate', [$this, 'dateFilter']),
+        ];
     }
 
     public function dateFilter($string, $lang = 'es_ES', $pattern = 'd \'de\' MMMM \'del\' Y')
@@ -31,12 +31,34 @@ class AppExtension extends \Twig_Extension
         preg_match('/(\d{4})(\d{2})(\d{2})/', $string, $m);
 
         if (4 != count($m)) {
-            return $string;
+            preg_match('/(\d{4})-(\d{2})-(\d{2})/', $string, $m);
+            if (4 != count($m)) {
+                return $string;
+            }
         }
 
         $formatter = new \IntlDateFormatter($lang, \IntlDateFormatter::LONG, \IntlDateFormatter::LONG);
         $formatter->setPattern($pattern);
 
         return $formatter->format(new \DateTime(sprintf('%d-%d-%d', $m[1], $m[2], $m[3])));
+    }
+
+    public function mapTestToJS($data)
+    {
+        $dataSets = [];
+
+        $dataSet = new \stdClass();
+
+        $dataSet->label = 'Hosts';
+        $dataSet->data = $data->counts;
+
+
+        $dataSets[] = sprintf("{label:'Counts',data:[%s]}", implode(',', $data->counts));
+
+        foreach ($data->macs as $mac => $tests) {
+            $dataSets[] = sprintf("{label:'%s',data:[%s]}", $mac, implode(',', $tests));
+        }
+
+        return sprintf('[%s]', implode(',', $dataSets));
     }
 }

@@ -46,10 +46,31 @@ class DefaultController extends Controller
      */
     public function maptestAction(MapTest $mapTest)
     {
+        $testSuite = $mapTest->readTests();
+        $macs      = $mapTest->getMacs($testSuite);
+
+        $results = [];
+
+        foreach ($testSuite as $date => $tests) {
+            $result = new \stdClass();
+            foreach ($tests as $test) {
+                $result->headers[] = $date.' '.$test->time;
+                $result->counts[]  = count($test->unknown);
+
+                foreach ($macs[$date] as $mac => $macResults) {
+                    $result->macs[$mac][$test->time] = array_key_exists($test->time, $macResults) ? 1 : 0;
+                }
+            }
+
+            $results[$date] = $result;
+        }
+
         return $this->render(
             'tests/maptest.html.twig',
             [
-                'tests' => $mapTest->readTests(),
+                'macs'      => $macs,
+                'results'   => $results,
+                'actDate'   => (new \DateTime())->format('Y-m-d'),
             ]
         );
     }

@@ -2,7 +2,33 @@
 
 {% block title %}Maptest{% endblock %}
 
+{% block stylesheets %}
+    <link rel="stylesheet" href="{{ asset('assets/css/maptest.css') }}">
+{% endblock %}
+
 {% block body %}
-<h1>MapTest Results</h1>
-{{ dump(tests) }}
+    <h1>MapTest Results</h1>
+    {% for date, tests in results %}
+        <h2 class="title{{ date == actDate ? ' current' : '' }}">{{ date|cDate }}</h2>
+        <canvas id="chart-{{ date }}" width="400" height="100"></canvas>
+        <ul>
+            {% for mac, vals in macs[date] %}
+                {% set v = vals|first %}
+                <li><span class="macAddr">{{ mac }}</span> - {{ v.vendor }}</li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <h2>No Test found :(</h2>
+    {% endfor %}
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script src="{{ asset('assets/vendor/chart.js/dist/Chart.bundle.min.js') }}"></script>
+    <script src="{{ asset('assets/js/maptest.js') }}"></script>
+    <script>
+        {% for date, tests in results %}
+        drawChart('{{ date }}', ['{{ tests.headers|join("','")|raw }}'], {{ mapTestToJS(tests)|raw }});
+        {% endfor %}
+    </script>
 {% endblock %}

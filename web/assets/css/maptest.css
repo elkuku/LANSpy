@@ -1,0 +1,11 @@
+h2.title {
+    text-align: center;
+}
+
+h2.current {
+    color: blue;
+}
+
+span.macAddr {
+    font-family: monospace;
+}

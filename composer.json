@@ -1,6 +1,6 @@
 {
-  "name": "elkuku/pingtest",
-  "description": "ping test",
+  "name": "elkuku/lanspy",
+  "description": "LAN Spy",
   "minimum-stability": "stable",
   "license": "WTFPL",
   "authors": [
