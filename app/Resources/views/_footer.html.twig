@@ -1,0 +1,8 @@
+{% block footer %}
+    &bull; Hand crafted 2017 by <a href="https://github.com/elkuku">elkuku</a>
+    &bull; using <a href="http://symfony.com">Symfony</a>
+    {% if app.user %}
+        &bull;  Version: {{ sha[:7] }}
+    {% endif %}
+    &bull; <code>=;)</code> &bull;
+{% endblock %}

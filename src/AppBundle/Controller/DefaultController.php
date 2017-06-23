@@ -2,18 +2,24 @@
 
 namespace AppBundle\Controller;
 
+use AppBundle\Entity\Host;
 use AppBundle\Service\MapTest;
 use AppBundle\Service\PingTest;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 
+/**
+ * Class DefaultController
+ * @package AppBundle\Controller
+ */
 class DefaultController extends Controller
 {
     /**
      * @Route("/", name="homepage")
+     * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function indexAction(Request $request)
+    public function indexAction()
     {
         // replace this example code with whatever you need
         return $this->render(
@@ -26,8 +32,11 @@ class DefaultController extends Controller
 
     /**
      * @Route("pingtest", name="pingtest")
+     * @param PingTest $pingtest
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function pingtestAction(PingTest $pingtest)
+    public function pingTestAction(PingTest $pingtest)
     {
         return $this->render(
             'tests/pingtest.html.twig',
@@ -42,23 +51,55 @@ class DefaultController extends Controller
      * @Route("maptest", name="maptest")
      * @param MapTest $mapTest
      *
+     * @param Request $request
+     *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function maptestAction(MapTest $mapTest)
+    public function mapTestAction(MapTest $mapTest, Request $request)
     {
+        //Process form
+        if ($request->request->get('name')) {
+            $this->processNewHost($request);
+        }
+
         $testSuite = $mapTest->readTests();
         $macs      = $mapTest->getMacs($testSuite);
+        $unknownMacs = $macs;
+        $knownMacs = [];
+
+        $knownHosts = [];
+        foreach ($this->getDoctrine()
+                     ->getRepository(Host::class)
+                     ->findBy([], ['name' => 'desc']) as $host) {
+            $knownHosts[$host->getMac()] = $host;
+            foreach ($unknownMacs as $date => $macList) {
+                if (array_key_exists($host->getMac(), $macList)) {
+                    unset($unknownMacs[$date][$host->getMac()]);
+                    $knownMacs[$date][$host->getName()] = $host;
+                }
+            }
+        }
+
 
         $results = [];
 
         foreach ($testSuite as $date => $tests) {
             $result = new \stdClass();
+            $result->known = [];
+            $result->unknown = [];
             foreach ($tests as $test) {
                 $result->headers[] = $date.' '.$test->time;
                 $result->counts[]  = count($test->unknown);
 
                 foreach ($macs[$date] as $mac => $macResults) {
-                    $result->macs[$mac][$test->time] = array_key_exists($test->time, $macResults) ? 1 : 0;
+                    if (array_key_exists($mac, $knownHosts)) {
+                        $result->known[$knownHosts[$mac]->getName()][$test->time] = array_key_exists(
+                            $test->time,
+                            $macResults
+                        ) ? 1 : 0;
+                    } else {
+                        $result->unknown[$mac][$test->time] = array_key_exists($test->time, $macResults) ? 1 : 0;
+                    }
                 }
             }
 
@@ -68,10 +109,28 @@ class DefaultController extends Controller
         return $this->render(
             'tests/maptest.html.twig',
             [
-                'macs'      => $macs,
+                'unknown'   => $unknownMacs,
                 'results'   => $results,
+                'knownMacs' => $knownMacs,
                 'actDate'   => (new \DateTime())->format('Y-m-d'),
             ]
         );
+    }
+
+    private function processNewHost(Request $request)
+    {
+        $host = new Host();
+
+        $host->setMac($request->request->get('mac'));
+        $host->setName($request->request->get('name'));
+        $host->setVendor($request->request->get('vendor'));
+
+        $em = $this->getDoctrine()->getManager();
+        $em->persist($host);
+        $em->flush();
+
+        $this->addFlash('success', 'Host has been added');
+
+        return $this;
     }
 }

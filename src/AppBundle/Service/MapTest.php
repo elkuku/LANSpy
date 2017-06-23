@@ -52,6 +52,10 @@ class MapTest
             }
         }
 
+        ksort($tests);
+
+        $tests = array_reverse($tests);
+
         return $tests;
     }
 

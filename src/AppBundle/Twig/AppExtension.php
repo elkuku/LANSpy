@@ -43,7 +43,7 @@ class AppExtension extends \Twig_Extension
         return $formatter->format(new \DateTime(sprintf('%d-%d-%d', $m[1], $m[2], $m[3])));
     }
 
-    public function mapTestToJS($data)
+    public function mapTestToJS($data): string
     {
         $dataSets = [];
 
@@ -52,10 +52,13 @@ class AppExtension extends \Twig_Extension
         $dataSet->label = 'Hosts';
         $dataSet->data = $data->counts;
 
-
         $dataSets[] = sprintf("{label:'Counts',data:[%s]}", implode(',', $data->counts));
 
-        foreach ($data->macs as $mac => $tests) {
+        foreach ($data->known as $name => $tests) {
+            $dataSets[] = sprintf("{label:'%s',data:[%s]}", $name, implode(',', $tests));
+        }
+
+        foreach ($data->unknown as $mac => $tests) {
             $dataSets[] = sprintf("{label:'%s',data:[%s]}", $mac, implode(',', $tests));
         }
 

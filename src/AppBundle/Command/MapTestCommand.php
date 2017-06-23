@@ -69,11 +69,11 @@ class MapTestCommand extends ContainerAwareCommand
                 $host = new Host();
 
                 $host->hostname = $matches[1];
-                $host->ip = $matches[2];
+                //$host->ip = $matches[2];
             } elseif (preg_match('/Nmap scan report for (.+)/', $line, $matches)) {
                 $host = new Host();
 
-                $host->ip = $matches[1];
+                //$host->ip = $matches[1];
             }
 
             // MAC Address: CC:B2:55:FC:88:46 (D-Link International)
