@@ -23,7 +23,6 @@ class MapTestCommand extends ContainerAwareCommand
         $this
             ->setName('maptest')
             ->setDescription('Scan');
-            //->addArgument('project', InputArgument::REQUIRED, 'The project name');
     }
 
     /**
@@ -49,8 +48,6 @@ class MapTestCommand extends ContainerAwareCommand
 
         $s = shell_exec($command);
 
-        //echo $s;
-
         $lines = explode("\n", trim($s));
 
         if (!count($lines)) {
@@ -68,7 +65,7 @@ class MapTestCommand extends ContainerAwareCommand
             if (preg_match('/Nmap scan report for (.+) \((.+)\)/', $line, $matches)) {
                 $host = new Host();
 
-                $host->hostname = $matches[1];
+                $host->setHostname($matches[1]);
                 //$host->ip = $matches[2];
             } elseif (preg_match('/Nmap scan report for (.+)/', $line, $matches)) {
                 $host = new Host();
@@ -78,18 +75,17 @@ class MapTestCommand extends ContainerAwareCommand
 
             // MAC Address: CC:B2:55:FC:88:46 (D-Link International)
             if (preg_match('/MAC Address: (.{17}) \((.+)\)/', $line, $matches)) {
-                $host->mac = $matches[1];
-                $host->vendor = $matches[2];
+                $host->setMac($matches[1]);
+                $host->setVendor($matches[2]);
 
                 $hosts[] = $host;
             } elseif (preg_match('/MAC Address: (.+)/', $line, $matches)) {
-                $host->mac = $matches[1];
+                $host->setMac($matches[1]);
 
                 $hosts[] = $host;
             }
         }
 
-       // echo json_encode($hosts);
         $outputFile = $this->getContainer()->get('kernel')->getProjectDir().'/results/maptest-'.(new \DateTime())->format('Y-m-d').'.txt';
 
         $response = new \stdClass();
@@ -102,10 +98,5 @@ class MapTestCommand extends ContainerAwareCommand
 
         $fs = new Filesystem();
         $fs->appendToFile($outputFile, json_encode($response)."\n");
-    }
-
-    private function text(string $message)
-    {
-
     }
 }
