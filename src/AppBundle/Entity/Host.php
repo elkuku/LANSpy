@@ -18,7 +18,7 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
  * @ORM\Entity
  * @UniqueEntity(fields="max", message="There is already a host with this mac.")
  */
-class Host
+class Host implements \JsonSerializable
 {
     /**
      * @ORM\Id;
@@ -162,5 +162,20 @@ class Host
     public function getName()
     {
         return $this->name;
+    }
+
+    /**
+     * Specify data which should be serialized to JSON
+     * @link  http://php.net/manual/en/jsonserializable.jsonserialize.php
+     * @return mixed data which can be serialized by <b>json_encode</b>,
+     * which is a value of any type other than a resource.
+     */
+    public function jsonSerialize()
+    {
+        return [
+            'mac'      => $this->mac,
+            'vemdor'   => $this->vendor,
+            'hostname' => $this->hostname,
+        ];
     }
 }
