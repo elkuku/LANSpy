@@ -174,7 +174,7 @@ class Host implements \JsonSerializable
     {
         return [
             'mac'      => $this->mac,
-            'vemdor'   => $this->vendor,
+            'vendor'   => $this->vendor,
             'hostname' => $this->hostname,
         ];
     }
