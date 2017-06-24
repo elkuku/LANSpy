@@ -8,16 +8,45 @@
 
 namespace AppBundle\Twig;
 
+use AppBundle\Service\ShaFinder;
 use Twig_Function;
 
 class AppExtension extends \Twig_Extension
 {
+    /**
+     * @var ShaFinder
+     */
+    private $shaFinder;
+
+    /**
+     * AppExtension constructor.
+     *
+     * @param ShaFinder $shaFinder
+     */
+    public function __construct(ShaFinder $shaFinder)
+    {
+        $this->shaFinder = $shaFinder;
+    }
+
+    /**
+     * @return array
+     */
     public function getFunctions()
     {
         return [
             new Twig_Function('mapTestToJS', [$this, 'mapTestToJS']),
+            new Twig_Function(
+                'getVersion',
+                function () {
+                    return $this->shaFinder->getSha();
+                }
+            ),
         ];
     }
+
+    /**
+     * @return array
+     */
     public function getFilters()
     {
         return [
@@ -25,12 +54,20 @@ class AppExtension extends \Twig_Extension
         ];
     }
 
-    public function dateFilter($string, $lang = 'es_ES', $pattern = 'd \'de\' MMMM \'del\' Y')
+    /**
+     * @param string $string
+     * @param string $lang
+     * @param string $pattern
+     *
+     * @return bool|string
+     */
+    public function dateFilter(string $string, string $lang = 'es_ES', string $pattern = 'd \'de\' MMMM \'del\' Y')
     {
         // Expected: YYYYMMDD
         preg_match('/(\d{4})(\d{2})(\d{2})/', $string, $m);
 
         if (4 != count($m)) {
+            // Expected: YYYY-MM-DD
             preg_match('/(\d{4})-(\d{2})-(\d{2})/', $string, $m);
             if (4 != count($m)) {
                 return $string;
@@ -43,19 +80,27 @@ class AppExtension extends \Twig_Extension
         return $formatter->format(new \DateTime(sprintf('%d-%d-%d', $m[1], $m[2], $m[3])));
     }
 
-    public function mapTestToJS($data): string
+    /**
+     * @param object $data
+     * @param bool   $showKnown
+     *
+     * @return string
+     */
+    public function mapTestToJS($data, $showKnown = false): string
     {
         $dataSets = [];
 
         $dataSet = new \stdClass();
 
         $dataSet->label = 'Hosts';
-        $dataSet->data = $data->counts;
+        $dataSet->data  = $data->counts;
 
         $dataSets[] = sprintf("{label:'Counts',data:[%s]}", implode(',', $data->counts));
 
-        foreach ($data->known as $name => $tests) {
-            $dataSets[] = sprintf("{label:'%s',data:[%s]}", $name, implode(',', $tests));
+        if ($showKnown) {
+            foreach ($data->known as $name => $tests) {
+                $dataSets[] = sprintf("{label:'%s',data:[%s]}", $name, implode(',', $tests));
+            }
         }
 
         foreach ($data->unknown as $mac => $tests) {
