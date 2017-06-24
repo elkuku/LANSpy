@@ -35,3 +35,7 @@ services:
 
     AppBundle\Service\MapTest:
         $root: '%kernel.project_dir%'
+
+    AppBundle\Service\ShaFinder:
+        $root: '%kernel.project_dir%'
+
