@@ -1,3 +1,11 @@
 body {
     padding-top: 50px;
+    padding-bottom: 30px;
+}
+
+.footer {
+    padding: 5px;
+    font-family: monospace;
+    background-color: rgba(112, 113, 89, 0.43);
+    text-align: center;
 }
