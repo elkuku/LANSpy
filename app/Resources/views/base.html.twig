@@ -29,10 +29,7 @@
             <a class="navbar-brand" href="{{ path('homepage') }}">LANSpy</a>
         </div>
         <div id="navbar" class="collapse navbar-collapse">
-            <ul class="nav navbar-nav">
-                <li><a href="{{ path('pingtest') }}">Pingtest</a></li>
-                <li><a href="{{ path('maptest') }}">Maptest</a></li>
-            </ul>
+            {% include ('_menu.html.twig') %}
         </div><!--/.nav-collapse -->
     </div>
 </nav>

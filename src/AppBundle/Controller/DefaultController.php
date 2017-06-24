@@ -31,6 +31,16 @@ class DefaultController extends Controller
     }
 
     /**
+     * @Route("about", name="about")
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function aboutAction()
+    {
+        // replace this example code with whatever you need
+        return $this->render('default/about.html.twig');
+    }
+
+    /**
      * @Route("pingtest", name="pingtest")
      * @param PingTest $pingtest
      *

@@ -10,33 +10,40 @@
     <h1>MapTest Results</h1>
     {% for date, tests in results %}
         <h2 class="title{{ date == actDate ? ' current' : '' }}">{{ date|cDate }}</h2>
+
         <canvas id="chart-{{ date }}" width="400" height="100"></canvas>
+
         <table class="table table-condensed">
-            {% for name, vals in knownMacs[date] %}
-                <tr>
-                    <td>{{ name }}</td>
-                    <td><span class="macAddr">{{ vals.mac }}</span></td>
-                    <td>{{ vals.vendor }}</td>
-                    <td></td>
-                </tr>
-            {% endfor %}
+            {% if is_granted('ROLE_ADMIN') %}
+                {% if knownMacs %}
+                    {% for name, vals in knownMacs[date] %}
+                        <tr>
+                            <td>{{ name }}</td>
+                            <td><span class="macAddr">{{ vals.mac }}</span></td>
+                            <td>{{ vals.vendor }}</td>
+                            <td></td>
+                        </tr>
+                    {% endfor %}
+                {% endif %}
+            {% endif %}
+
             {% for mac, vals in unknown[date] %}
-            <tr>
-                {% set v = vals|first %}
-                <td>?</td>
-                <td><span class="macAddr">{{ mac }}</span></td>
-                <td>{{ v.vendor }}</td>
-                <td>
-                    <form method="post">
-                    <input name="name">
-                    <input type="hidden" name="mac" value="{{ mac }}">
-                    <input type="hidden" name="vendor" value="{{ v.vendor }}">
-                    <button>Add</button>
-                </form>
-
-                </td>
-
-            </tr>
+                <tr>
+                    {% set v = vals|first %}
+                    <td>?</td>
+                    <td><span class="macAddr">{{ mac }}</span></td>
+                    <td>{{ v.vendor }}</td>
+                    <td>
+                        {% if is_granted('ROLE_ADMIN') %}
+                            <form method="post">
+                                <input name="name">
+                                <input type="hidden" name="mac" value="{{ mac }}">
+                                <input type="hidden" name="vendor" value="{{ v.vendor }}">
+                                <button>Add</button>
+                            </form>
+                        {% endif %}
+                    </td>
+                </tr>
             {% endfor %}
         </table>
     {% else %}
@@ -50,7 +57,7 @@
     <script src="{{ asset('assets/js/maptest.js') }}"></script>
     <script>
         {% for date, tests in results %}
-        drawChart('{{ date }}', ['{{ tests.headers|join("','")|raw }}'], {{ mapTestToJS(tests)|raw }});
+        drawChart('{{ date }}', ['{{ tests.headers|join("','")|raw }}'], {{ mapTestToJS(tests, is_granted('ROLE_ADMIN'))|raw }});
         {% endfor %}
     </script>
 {% endblock %}
