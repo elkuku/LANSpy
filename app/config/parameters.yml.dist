@@ -2,7 +2,7 @@
 # Set parameters here that may be different on each deployment target of the app, e.g. development, staging, production.
 # https://symfony.com/doc/current/best_practices/configuration.html#infrastructure-related-configuration
 parameters:
-    database_path: '%kernel.project_dir%/var/data/data.sqlite'
+    database_path: '%kernel.project_dir%/var/database.sqlite'
 
     mailer_transport: smtp
     mailer_host: 127.0.0.1
