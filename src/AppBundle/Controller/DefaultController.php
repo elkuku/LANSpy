@@ -6,6 +6,7 @@ use AppBundle\Entity\Host;
 use AppBundle\Service\MapTest;
 use AppBundle\Service\PingTest;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -67,11 +68,6 @@ class DefaultController extends Controller
      */
     public function mapTestAction(MapTest $mapTest, Request $request)
     {
-        //Process form
-        if ($request->request->get('name')) {
-            $this->processNewHost($request);
-        }
-
         $testSuite = $mapTest->readTests();
         $macs      = $mapTest->getMacs($testSuite);
         $unknownMacs = $macs;
@@ -127,7 +123,15 @@ class DefaultController extends Controller
         );
     }
 
-    private function processNewHost(Request $request)
+    /**
+     * @Route("addhost", name="admin.addHost")
+     * @Security("has_role('ROLE_ADMIN')")
+     *
+     * @param Request $request
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function addHost(Request $request)
     {
         $host = new Host();
 
@@ -141,6 +145,6 @@ class DefaultController extends Controller
 
         $this->addFlash('success', 'Host has been added');
 
-        return $this;
+        return $this->redirectToRoute('maptest');
     }
 }

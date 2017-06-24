@@ -35,7 +35,7 @@
                     <td>{{ v.vendor }}</td>
                     <td>
                         {% if is_granted('ROLE_ADMIN') %}
-                            <form method="post">
+                            <form method="post" action="{{ path('admin.addHost') }}">
                                 <input name="name">
                                 <input type="hidden" name="mac" value="{{ mac }}">
                                 <input type="hidden" name="vendor" value="{{ v.vendor }}">
