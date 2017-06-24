@@ -60,13 +60,12 @@ class DefaultController extends Controller
 
     /**
      * @Route("maptest", name="maptest")
-     * @param MapTest $mapTest
      *
-     * @param Request $request
+     * @param MapTest $mapTest
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function mapTestAction(MapTest $mapTest, Request $request)
+    public function mapTestAction(MapTest $mapTest)
     {
         $testSuite = $mapTest->readTests();
         $macs      = $mapTest->getMacs($testSuite);
