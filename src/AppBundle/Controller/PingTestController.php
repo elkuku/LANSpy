@@ -28,10 +28,10 @@ class PingTestController extends Controller
         return $this->render(
             'tests/pingtest.html.twig',
             [
+                'actDate'   => (new \DateTime())->format('Ymd'),
                 'dateStart' => $dateStart,
                 'dateEnd'   => $dateEnd,
                 'tests'     => $pingtest->readTests(new \DateTime($dateStart), new \DateTime($dateEnd)),
-                'actDate'   => (new \DateTime())->format('Ymd'),
             ]
         );
     }

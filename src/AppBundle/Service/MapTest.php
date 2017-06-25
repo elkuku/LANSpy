@@ -27,9 +27,12 @@ class MapTest
     }
 
     /**
+     * @param \DateTime $startDate
+     * @param \DateTime $endDate
+     *
      * @return array
      */
-    public function readTests(): array
+    public function readTests(\DateTime $startDate, \DateTime $endDate): array
     {
         $tests = [];
 
@@ -40,6 +43,14 @@ class MapTest
 
             if (0 === strpos($iterator->getBasename(), 'maptest-2017')) {
                 $date = substr($iterator->getBasename(), 8, 10);
+
+                if (new \DateTime($date) < $startDate) {
+                    continue;
+                }
+
+                if (new \DateTime($date) > $endDate) {
+                    continue;
+                }
 
                 foreach (file($iterator->getPathname()) as $line) {
                     $t = json_decode($line);
@@ -59,7 +70,12 @@ class MapTest
         return $tests;
     }
 
-    public function getMacs(array $testSuite)
+    /**
+     * @param array $testSuite
+     *
+     * @return array
+     */
+    public function getMacs(array $testSuite): array
     {
         $macs = [];
 

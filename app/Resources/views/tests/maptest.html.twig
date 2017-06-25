@@ -8,6 +8,11 @@
 
 {% block body %}
     <h1>MapTest Results</h1>
+    <form method="post">
+        <label for="date_start">Desde : </label> <input id="date_start" name="date_start" type="date" value="{{ dateStart }}"/>
+        <label for="date_end">Hasta : </label> <input id="date_end" name="date_end" type="date" value="{{ dateEnd }}"/>
+        <button>Buscar</button>
+    </form>
     {% for date, tests in results %}
         <h2 class="title{{ date == actDate ? ' current' : '' }}">{{ date|cDate }}</h2>
 
@@ -59,5 +64,10 @@
         {% for date, tests in results %}
         drawChart('{{ date }}', ['{{ tests.headers|join("','")|raw }}'], {{ mapTestToJS(tests, is_granted('ROLE_ADMIN'))|raw }});
         {% endfor %}
+        {% if dateStart == dateEnd == actDate %}
+        setTimeout(function () {
+            window.location.reload(1);
+        }, 60000);
+        {% endif %}
     </script>
 {% endblock %}

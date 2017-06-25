@@ -27,6 +27,9 @@ class PingTest
     }
 
     /**
+     * @param \DateTime $startDate
+     * @param \DateTime $endDate
+     *
      * @return array
      */
     public function readTests(\DateTime $startDate, \DateTime $endDate): array
