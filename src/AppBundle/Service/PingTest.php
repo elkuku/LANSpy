@@ -29,10 +29,11 @@ class PingTest
     /**
      * @return array
      */
-    public function readTests(): array
+    public function readTests(\DateTime $startDate, \DateTime $endDate): array
     {
         $tests1 = [];
         $tests2 = [];
+
         foreach (new \DirectoryIterator($this->root) as $iterator) {
             if ($iterator->isDir()) {
                 continue;
@@ -40,6 +41,14 @@ class PingTest
 
             if (0 === strpos($iterator->getBasename(), 'pingtest2017')) {
                 $date = substr($iterator->getBasename(), 8, 8);
+
+                if (new \DateTime($this->formatDateString($date)) < $startDate) {
+                    continue;
+                }
+
+                if (new \DateTime($this->formatDateString($date)) > $endDate) {
+                    continue;
+                }
 
                 foreach (file($iterator->getPathname()) as $line) {
                     $parts = explode(' ', trim($line));
@@ -74,8 +83,14 @@ class PingTest
      */
     private function formatDateString(string $string): string
     {
-        preg_match_all('/(\d{4})(\d{2})(\d{2})(\d{2})(\d{2})/', $string, $m);
+        if (preg_match('/(\d{4})(\d{2})(\d{2})(\d{2})(\d{2})/', $string, $m)) {
+            return $m[1].'-'.$m[2].'-'.$m[3].' '.$m[4].':'.$m[5];
+        }
 
-        return $m[1][0].'-'.$m[2][0].'-'.$m[3][0].' '.$m[4][0].':'.$m[5][0];
+        if (preg_match('/(\d{4})(\d{2})(\d{2})/', $string, $m)) {
+            return $m[1].'-'.$m[2].'-'.$m[3];
+        }
+
+        return $string;
     }
 }

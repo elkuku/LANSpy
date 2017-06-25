@@ -4,7 +4,6 @@ namespace AppBundle\Controller;
 
 use AppBundle\Entity\Host;
 use AppBundle\Service\MapTest;
-use AppBundle\Service\PingTest;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -39,23 +38,6 @@ class DefaultController extends Controller
     {
         // replace this example code with whatever you need
         return $this->render('default/about.html.twig');
-    }
-
-    /**
-     * @Route("pingtest", name="pingtest")
-     * @param PingTest $pingtest
-     *
-     * @return \Symfony\Component\HttpFoundation\Response
-     */
-    public function pingTestAction(PingTest $pingtest)
-    {
-        return $this->render(
-            'tests/pingtest.html.twig',
-            [
-                'tests'   => $pingtest->readTests(),
-                'actDate' => (new \DateTime())->format('Ymd'),
-            ]
-        );
     }
 
     /**
