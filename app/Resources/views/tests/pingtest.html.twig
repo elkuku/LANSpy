@@ -1,13 +1,13 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Pingtest{% endblock %}
+{% block title %}Pings{% endblock %}
 
 {% block stylesheets %}
     <link rel="stylesheet" href="{{ asset('assets/css/pingtest.css') }}">
 {% endblock %}
 
 {% block body %}
-    <h1>PingTest</h1>
+    <h1>Pings</h1>
     <form method="post">
         <label for="date_start">Desde : </label> <input id="date_start" name="date_start" type="date"
                                                         value="{{ dateStart }}"/>
