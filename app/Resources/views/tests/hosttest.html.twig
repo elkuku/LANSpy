@@ -1,13 +1,13 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Maptest{% endblock %}
+{% block title %}Hosts{% endblock %}
 
 {% block stylesheets %}
-    <link rel="stylesheet" href="{{ asset('assets/css/maptest.css') }}">
+    <link rel="stylesheet" href="{{ asset('assets/css/hosttest.css') }}">
 {% endblock %}
 
 {% block body %}
-    <h1>MapTest Results</h1>
+    <h1>Hosts</h1>
     <form method="post">
         <label for="date_start">Desde : </label> <input id="date_start" name="date_start" type="date" value="{{ dateStart }}"/>
         <label for="date_end">Hasta : </label> <input id="date_end" name="date_end" type="date" value="{{ dateEnd }}"/>
@@ -15,6 +15,8 @@
     </form>
     {% for date, tests in results %}
         <h2 class="title{{ date == actDate ? ' current' : '' }}">{{ date|cDate }}</h2>
+
+        Known: {{ tests.known|length }} UnKnown: {{ tests.unknown|length }}
 
         <canvas id="chart-{{ date }}" width="400" height="100"></canvas>
 

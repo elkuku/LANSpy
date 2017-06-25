@@ -16,7 +16,7 @@ use Symfony\Component\HttpFoundation\Request;
 class HostTestController extends Controller
 {
     /**
-     * @Route("maptest", name="maptest")
+     * @Route("hosttest", name="hosttest")
      *
      * @param Request $request
      * @param MapTest $mapTest
@@ -71,7 +71,7 @@ class HostTestController extends Controller
         }
 
         return $this->render(
-            'tests/maptest.html.twig',
+            'tests/hosttest.html.twig',
             [
                 'actDate'   => (new \DateTime())->format('Y-m-d'),
                 'dateStart' => $dateStart,

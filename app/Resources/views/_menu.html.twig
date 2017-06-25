@@ -1,7 +1,7 @@
 {% block menu %}
     <ul class="nav navbar-nav">
-        <li><a href="{{ path('pingtest') }}">Pingtest</a></li>
-        <li><a href="{{ path('maptest') }}">Maptest</a></li>
+        <li><a href="{{ path('pingtest') }}">Pings</a></li>
+        <li><a href="{{ path('hosttest') }}">Hosts</a></li>
         {% if is_granted('ROLE_ADMIN') %}
             <li><a href="{{ path('pingtest') }}">SSH</a></li>
             <li><a href="{{ path('pingtest') }}">Users</a></li>
