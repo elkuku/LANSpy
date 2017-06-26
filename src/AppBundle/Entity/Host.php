@@ -15,8 +15,8 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
  * Class Host
  * @package AppBundle\Entity
  *
- * @ORM\Entity
- * @UniqueEntity(fields="max", message="There is already a host with this mac.")
+ * @ORM\Entity(repositoryClass="AppBundle\Entity\HostRepository")
+ * @UniqueEntity(fields="mac", message="There is already a host with this mac.")
  */
 class Host implements \JsonSerializable
 {

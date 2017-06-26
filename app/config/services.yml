@@ -39,3 +39,5 @@ services:
     AppBundle\Service\ShaFinder:
         $root: '%kernel.project_dir%'
 
+    AppBundle\Command\ReportCommand:
+        $emailSender: '%app.notifications.email_sender%'

@@ -7,6 +7,7 @@ imports:
 # https://symfony.com/doc/current/best_practices/configuration.html#application-related-configuration
 parameters:
     locale: en
+    app.notifications.email_sender: elkuku.code@gmail.com
 
 framework:
     #esi: ~
@@ -60,7 +61,6 @@ doctrine:
 # Swiftmailer Configuration
 swiftmailer:
     transport: '%mailer_transport%'
-    host: '%mailer_host%'
     username: '%mailer_user%'
     password: '%mailer_password%'
     spool: { type: memory }

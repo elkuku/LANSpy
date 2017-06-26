@@ -4,9 +4,9 @@
 parameters:
     database_path: '%kernel.project_dir%/var/database.sqlite'
 
-    mailer_transport: smtp
+    mailer_transport: gmail
     mailer_host: 127.0.0.1
-    mailer_user: ~
+    mailer_user: elkuku.code@gmail.com
     mailer_password: ~
 
     # A secret key that's used to generate certain security-related tokens
