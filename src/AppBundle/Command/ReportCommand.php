@@ -104,9 +104,10 @@ class ReportCommand extends ContainerAwareCommand
         $io             = new SymfonyStyle($input, $bufferedOutput);
         $hostName       = trim(shell_exec('hostname'));
         $ip             = trim(shell_exec('hostname -I'));
+        $subject = sprintf('LANSpy report from %s %s', $hostName, $ip);
 
-        $io->title(sprintf('Hosts report from %s %s', $hostName, $ip));
-        $io->text($dateStart->format('Y-m-d'));
+        $io->title($subject);
+        $io->text($dateStart->format('Y-m-d H:i:s').' - '.$dateEnd->format('Y-m-d H:i:s'));
 
         if ($macList) {
             $io->table(
@@ -121,19 +122,20 @@ class ReportCommand extends ContainerAwareCommand
 
         $output->write($content);
 
-        $this->sendReport($content, $this->emailSender);
+        $this->sendReport($subject, $content, $this->emailSender);
     }
 
     /**
      * Sends the given $contents to the $recipient email address.
      *
+     * @param string $subject
      * @param string $contents
      * @param string $recipient
      */
-    private function sendReport($contents, $recipient)
+    private function sendReport(string $subject, string $contents, string $recipient)
     {
         $message = $this->mailer->createMessage()
-            ->setSubject(sprintf('LANSpy app:report (%s)', date('Y-m-d H:i:s')))
+            ->setSubject($subject)
             ->setFrom($this->emailSender)
             ->setTo($recipient)
             ->setBody($contents, 'text/plain');
