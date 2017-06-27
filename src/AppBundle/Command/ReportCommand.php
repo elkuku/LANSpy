@@ -22,8 +22,19 @@ class ReportCommand extends ContainerAwareCommand
      */
     private $mapTest;
 
+    /**
+     * @var \Swift_Mailer
+     */
     private $mailer;
+
+    /**
+     * @var string
+     */
     private $emailSender;
+
+    /**
+     * @var EntityManagerInterface
+     */
     private $entityManager;
 
     /**
@@ -63,36 +74,38 @@ class ReportCommand extends ContainerAwareCommand
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-//        $dateStart = $request->request->get('date_start', (new \DateTime())->format('Y-m-d'));
-//        $dateEnd   = $request->request->get('date_end', (new \DateTime())->format('Y-m-d'));
         $dateStart = new \DateTime('midnight');
         $dateEnd   = new \DateTime();
 
-        $tests = $this->mapTest->readTests($dateStart, $dateEnd);
+        $tests   = $this->mapTest->readTests($dateStart, $dateEnd);
+        $macList = [];
 
-        $macs = $this->mapTest->getMacs($tests);
+        if ($tests) {
+            $macs = $this->mapTest->getMacs($tests);
 
-        $macTests = reset($macs);
-        $macList  = [];
+            $macTests = reset($macs);
 
-        $knownHosts = $this->entityManager
-            ->getRepository(Host::class)
-            ->findMACs();
+            $knownHosts = $this->entityManager
+                ->getRepository(Host::class)
+                ->findMACs();
 
-        foreach ($macTests as $times) {
-            $mac = reset($times);
+            foreach ($macTests as $times) {
+                $mac = reset($times);
 
-            if (in_array($mac->mac, $knownHosts)) {
-                continue;
+                if (in_array($mac->mac, $knownHosts)) {
+                    continue;
+                }
+
+                $macList[] = [$mac->mac, $mac->vendor.$mac->hostname];
             }
-
-            $macList[] = [$mac->mac, $mac->vendor.$mac->hostname];
         }
 
         $bufferedOutput = new BufferedOutput();
         $io             = new SymfonyStyle($input, $bufferedOutput);
+        $hostName       = trim(shell_exec('hostname'));
+        $ip             = trim(shell_exec('hostname -I'));
 
-        $io->title('Hosts report');
+        $io->title(sprintf('Hosts report from %s %s', $hostName, $ip));
         $io->text($dateStart->format('Y-m-d'));
 
         if ($macList) {
@@ -101,7 +114,7 @@ class ReportCommand extends ContainerAwareCommand
                 $macList
             );
         } else {
-            $io->text('No se han detectado intrusos :)');
+            $io->text('No se han detectado intrusos =:)');
         }
 
         $content = $bufferedOutput->fetch();
@@ -119,9 +132,8 @@ class ReportCommand extends ContainerAwareCommand
      */
     private function sendReport($contents, $recipient)
     {
-        // See https://symfony.com/doc/current/cookbook/email/email.html
         $message = $this->mailer->createMessage()
-            ->setSubject(sprintf('app:list-users report (%s)', date('Y-m-d H:i:s')))
+            ->setSubject(sprintf('LANSpy app:report (%s)', date('Y-m-d H:i:s')))
             ->setFrom($this->emailSender)
             ->setTo($recipient)
             ->setBody($contents, 'text/plain');
