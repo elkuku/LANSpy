@@ -1,3 +1,3 @@
 # LANSpy
 
-Spy on your local network.
+Spy on your **local** network.
