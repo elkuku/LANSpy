@@ -104,6 +104,6 @@ class HostTestController extends Controller
 
         $this->addFlash('success', 'Host has been added');
 
-        return $this->redirectToRoute('maptest');
+        return $this->redirectToRoute('hosttest');
     }
 }
