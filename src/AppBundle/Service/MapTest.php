@@ -130,8 +130,11 @@ class MapTest
                 }
             }
 
-            $results[$date] = $result;
+            $results['tests'][$date] = $result;
         }
+
+        $results['known'] = $knownMacs;
+        $results['unknown'] = $unknownMacs;
 
         return $results;
     }

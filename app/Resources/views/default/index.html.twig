@@ -16,7 +16,12 @@
         <div class="col-xs-4">
             <h3>Hosts</h3>
             <canvas id="hostschart-act" width="400" height="200"></canvas>
+            <h4>Known: {{ hostsTests.known|first|length }}</h4>
+            <h4>Unknown: {{ hostsTests.unknown|first|length }}</h4>
 
+            {% if hostsTests.unknown|first|length %}
+            <h4 class="alert-danger">INTRUDERS!!</h4>
+            {% endif %}
         </div>
     </div>
 {% endblock %}
@@ -36,7 +41,7 @@
         drawSpeedChart('act', ['{{ test.dates|join("','")|raw }}'], [{{ test.downloads|join(',') }}], [{{ test.uploads|join(',') }}]);
         {% endfor %}
 
-        {% for date, tests in hostsTests %}
+        {% for date, tests in hostsTests.tests %}
         drawHostsChart('act', ['{{ tests.headers|join("','")|raw }}'], {{ mapTestToJS(tests, is_granted('ROLE_ADMIN'))|raw }});
         {% endfor %}
 
