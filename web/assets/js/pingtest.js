@@ -1,5 +1,5 @@
-function drawChart(id, labels, data1, data2) {
-    new Chart(document.getElementById('chart-' + id), {
+function drawPingChart(id, labels, data1, data2) {
+    new Chart(document.getElementById('pingchart-' + id), {
         type: 'line',
         data: {
             labels: labels,

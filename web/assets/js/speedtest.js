@@ -1,5 +1,5 @@
-function drawChart(id, labels, data1, data2) {
-    new Chart(document.getElementById('chart-' + id), {
+function drawSpeedChart(id, labels, data1, data2) {
+    new Chart(document.getElementById('speedchart-' + id), {
         type: 'line',
         data: {
             labels: labels,

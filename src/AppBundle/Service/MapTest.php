@@ -89,4 +89,50 @@ class MapTest
 
         return $macs;
     }
+
+    public function getResults(\DateTime $startDate, \DateTime $endDate, array $dbMacs):array
+    {
+        $testSuite   = $this->readTests($startDate, $endDate);
+        $macs        = $this->getMacs($testSuite);
+        $unknownMacs = $macs;
+        $knownMacs   = [];
+        $knownHosts  = [];
+
+        foreach ($dbMacs as $host) {
+            $knownHosts[$host->getMac()] = $host;
+            foreach ($unknownMacs as $date => $macList) {
+                if (array_key_exists($host->getMac(), $macList)) {
+                    unset($unknownMacs[$date][$host->getMac()]);
+                    $knownMacs[$date][$host->getName()] = $host;
+                }
+            }
+        }
+
+        $results = [];
+
+        foreach ($testSuite as $date => $tests) {
+            $result          = new \stdClass();
+            $result->known   = [];
+            $result->unknown = [];
+            foreach ($tests as $test) {
+                $result->headers[] = $date.' '.$test->time;
+                $result->counts[]  = count($test->unknown);
+
+                foreach ($macs[$date] as $mac => $macResults) {
+                    if (array_key_exists($mac, $knownHosts)) {
+                        $result->known[$knownHosts[$mac]->getName()][$test->time] = array_key_exists(
+                            $test->time,
+                            $macResults
+                        ) ? 1 : 0;
+                    } else {
+                        $result->unknown[$mac][$test->time] = array_key_exists($test->time, $macResults) ? 1 : 0;
+                    }
+                }
+            }
+
+            $results[$date] = $result;
+        }
+
+        return $results;
+    }
 }

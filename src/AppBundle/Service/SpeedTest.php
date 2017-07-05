@@ -81,6 +81,27 @@ class SpeedTest
     }
 
     /**
+     * @param array $testSuite
+     *
+     * @return array
+     */
+    public function convertResult(array $testSuite):array
+    {
+        $results = [];
+
+        foreach ($testSuite as $date => $tests) {
+            /* @type Speed $test */
+            foreach ($tests as $dateTime => $test) {
+                $results[$date]['dates'][] = $dateTime;
+                $results[$date]['downloads'][] = $test->getDownload();
+                $results[$date]['uploads'][] = $test->getUpload();
+            }
+        }
+
+        return $results;
+    }
+
+    /**
      * @param string $string
      *
      * @return string

@@ -2,10 +2,6 @@
 
 {% block title %}Hosts{% endblock %}
 
-{% block stylesheets %}
-    <link rel="stylesheet" href="{{ asset('assets/css/hosttest.css') }}">
-{% endblock %}
-
 {% block body %}
     <h1>Hosts</h1>
     <form method="post">
@@ -18,7 +14,7 @@
 
         Known: {{ tests.known|length }} UnKnown: {{ tests.unknown|length }}
 
-        <canvas id="chart-{{ date }}" width="400" height="100"></canvas>
+        <canvas id="hostschart-{{ date }}" width="400" height="100"></canvas>
 
         <table class="table table-condensed">
             {% if is_granted('ROLE_ADMIN') %}
@@ -64,7 +60,7 @@
     <script src="{{ asset('assets/js/maptest.js') }}"></script>
     <script>
         {% for date, tests in results %}
-        drawChart('{{ date }}', ['{{ tests.headers|join("','")|raw }}'], {{ mapTestToJS(tests, is_granted('ROLE_ADMIN'))|raw }});
+        drawHostsChart('{{ date }}', ['{{ tests.headers|join("','")|raw }}'], {{ mapTestToJS(tests, is_granted('ROLE_ADMIN'))|raw }});
         {% endfor %}
         {% if dateStart == dateEnd == actDate %}
         setTimeout(function () {

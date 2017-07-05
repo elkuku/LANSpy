@@ -34,24 +34,13 @@ class SpeedTestController extends Controller
             new \DateTimeZone('America/Guayaquil')
         );
 
-        $testResults = [];
-
-        foreach ($testSuite as $date => $tests) {
-            /* @type Speed $test */
-            foreach ($tests as $dateTime => $test) {
-                $testResults[$date]['dates'][] = $dateTime;
-                $testResults[$date]['downloads'][] = $test->getDownload();
-                $testResults[$date]['uploads'][] = $test->getUpload();
-            }
-        }
-
         return $this->render(
             'tests/speedtest.html.twig',
             [
                 'actDate'   => (new \DateTime())->format('Y-m-d'),
                 'dateStart' => $dateStart,
                 'dateEnd'   => $dateEnd,
-                'tests'     => $testResults,
+                'tests'     => $speedTest->convertResult($testSuite),
             ]
         );
     }

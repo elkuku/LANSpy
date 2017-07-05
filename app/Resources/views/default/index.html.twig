@@ -1,7 +1,47 @@
 {% extends 'base.html.twig' %}
 
 {% block body %}
-    <div class="text-center">
-        <img src="{{ asset('assets/img/spy.jpg') }}"/>
+    <div class="row">
+        <div class="col-xs-4">
+            <h3>Ping</h3>
+            <canvas id="pingchart-act" width="400" height="200"></canvas>
+            <h3>Speed</h3>
+            <canvas id="speedchart-act" width="400" height="200"></canvas>
+        </div>
+        <div class="col-xs-4 text-center">
+            <img src="{{ asset('assets/img/spy.jpg') }}" class="img-responsive center-block" alt="LANSpy"/>
+            <h3>{{ hostname }}</h3>
+            <h3>{{ ip }}</h3>
+        </div>
+        <div class="col-xs-4">
+            <h3>Hosts</h3>
+            <canvas id="hostschart-act" width="400" height="200"></canvas>
+
+        </div>
     </div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script src="{{ asset('assets/vendor/chart.js/dist/Chart.bundle.min.js') }}"></script>
+    <script src="{{ asset('assets/js/pingtest.js') }}"></script>
+    <script src="{{ asset('assets/js/speedtest.js') }}"></script>
+    <script src="{{ asset('assets/js/maptest.js') }}"></script>
+    <script>
+        {% for date, test in pingTests[0] %}
+        drawPingChart('act', ['{{ test|keys|join("','")|raw }}'], [{{ test|join(',') }}], [{{ pingTests[1][date]|join(',') }}]);
+        {% endfor %}
+
+        {% for date, test in speedTests %}
+        drawSpeedChart('act', ['{{ test.dates|join("','")|raw }}'], [{{ test.downloads|join(',') }}], [{{ test.uploads|join(',') }}]);
+        {% endfor %}
+
+        {% for date, tests in hostsTests %}
+        drawHostsChart('act', ['{{ tests.headers|join("','")|raw }}'], {{ mapTestToJS(tests, is_granted('ROLE_ADMIN'))|raw }});
+        {% endfor %}
+
+        setTimeout(function () {
+            window.location.reload(1);
+        }, 60000);
+    </script>
 {% endblock %}

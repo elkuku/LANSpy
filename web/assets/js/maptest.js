@@ -1,5 +1,5 @@
-function drawChart(id, labels, dataSets) {
-    new Chart(document.getElementById('chart-' + id), {
+function drawHostsChart(id, labels, dataSets) {
+    new Chart(document.getElementById('hostschart-' + id), {
         type: 'line',
         data: {
             labels: labels,

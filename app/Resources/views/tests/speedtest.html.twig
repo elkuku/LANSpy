@@ -2,10 +2,6 @@
 
 {% block title %}Speed{% endblock %}
 
-{% block stylesheets %}
-    <link rel="stylesheet" href="{{ asset('assets/css/speedtest.css') }}">
-{% endblock %}
-
 {% block body %}
     <h1>Speed</h1>
     kBit/s
@@ -16,7 +12,7 @@
     </form>
     {% for date, test in tests %}
         <h2 class="title{{ date == actDate ? ' current' : '' }}">{{ date|cDate }}</h2>
-        <canvas id="chart-{{ date }}" width="400" height="100"></canvas>
+        <canvas id="speedchart-{{ date }}" width="400" height="100"></canvas>
     {% else %}
         <h2>No Test found :(</h2>
     {% endfor %}
@@ -28,7 +24,7 @@
     <script src="{{ asset('assets/js/speedtest.js') }}"></script>
     <script>
         {% for date, test in tests %}
-        drawChart('{{ date }}', ['{{ test.dates|join("','")|raw }}'], [{{ test.downloads|join(',') }}], [{{ test.uploads|join(',') }}]);
+        drawSpeedChart('{{ date }}', ['{{ test.dates|join("','")|raw }}'], [{{ test.downloads|join(',') }}], [{{ test.uploads|join(',') }}]);
         {% endfor %}
         {% if dateStart == dateEnd %}
         {# @todo check for actDate #}
