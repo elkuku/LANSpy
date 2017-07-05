@@ -1,0 +1,40 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Speed{% endblock %}
+
+{% block stylesheets %}
+    <link rel="stylesheet" href="{{ asset('assets/css/speedtest.css') }}">
+{% endblock %}
+
+{% block body %}
+    <h1>Speed</h1>
+    kBit/s
+    <form method="post">
+        <label for="date_start">Desde : </label> <input id="date_start" name="date_start" type="date" value="{{ dateStart }}"/>
+        <label for="date_end">Hasta : </label> <input id="date_end" name="date_end" type="date" value="{{ dateEnd }}"/>
+        <button>Buscar</button>
+    </form>
+    {% for date, test in tests %}
+        <h2 class="title{{ date == actDate ? ' current' : '' }}">{{ date|cDate }}</h2>
+        <canvas id="chart-{{ date }}" width="400" height="100"></canvas>
+    {% else %}
+        <h2>No Test found :(</h2>
+    {% endfor %}
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script src="{{ asset('assets/vendor/chart.js/dist/Chart.bundle.min.js') }}"></script>
+    <script src="{{ asset('assets/js/speedtest.js') }}"></script>
+    <script>
+        {% for date, test in tests %}
+        drawChart('{{ date }}', ['{{ test.dates|join("','")|raw }}'], [{{ test.downloads|join(',') }}], [{{ test.uploads|join(',') }}]);
+        {% endfor %}
+        {% if dateStart == dateEnd %}
+        {# @todo check for actDate #}
+        setTimeout(function () {
+            window.location.reload(1);
+        }, 60000);
+        {% endif %}
+    </script>
+{% endblock %}
