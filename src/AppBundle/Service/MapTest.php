@@ -41,7 +41,7 @@ class MapTest
                 continue;
             }
 
-            if (0 === strpos($iterator->getBasename(), 'maptest-2017')) {
+            if (0 === strpos($iterator->getBasename(), 'maptest')) {
                 $date = substr($iterator->getBasename(), 8, 10);
 
                 if (new \DateTime($date) < $startDate) {
@@ -90,7 +90,14 @@ class MapTest
         return $macs;
     }
 
-    public function getResults(\DateTime $startDate, \DateTime $endDate, array $dbMacs):array
+    /**
+     * @param \DateTime $startDate
+     * @param \DateTime $endDate
+     * @param array     $dbMacs
+     *
+     * @return array
+     */
+    public function getResults(\DateTime $startDate, \DateTime $endDate, array $dbMacs): array
     {
         $testSuite   = $this->readTests($startDate, $endDate);
         $macs        = $this->getMacs($testSuite);
@@ -108,7 +115,8 @@ class MapTest
             }
         }
 
-        $results = [];
+        $results          = [];
+        $results['tests'] = [];
 
         foreach ($testSuite as $date => $tests) {
             $result          = new \stdClass();
@@ -133,7 +141,7 @@ class MapTest
             $results['tests'][$date] = $result;
         }
 
-        $results['known'] = $knownMacs;
+        $results['known']   = $knownMacs;
         $results['unknown'] = $unknownMacs;
 
         return $results;

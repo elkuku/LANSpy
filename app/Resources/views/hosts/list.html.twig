@@ -1,0 +1,35 @@
+{% extends 'base.html.twig' %}
+
+{% block title %} {{ parent() }} - Hosts {% endblock %}
+
+{% block body %}
+
+    <h1>Hosts</h1>
+
+    <table class="table table-bordered table-condensed table-hover table-striped">
+        <tr>
+            <th>Id</th>
+            <th>Name</th>
+            <th>MAC</th>
+            <th>Vendor</th>
+            <th>Blocked</th>
+            <th>Action</th>
+        </tr>
+        {% for host in hosts %}
+            <tr>
+                <td>{{ host.id }}</td>
+                <td>{{ host.name }}</td>
+                <td>{{ host.mac }}</td>
+                <td>{{ host.vendor }}</td>
+                <td>{{ host.blocked ? 'yes' : 'no' }}</td>
+                <td>
+                    <a href="{{ path('admin.edit.host', {'id': host.id}) }}">Edit</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="6" class="alert alert-warning text-center">No hosts found!</td>
+            </tr>
+        {% endfor %}
+    </table>
+{% endblock %}

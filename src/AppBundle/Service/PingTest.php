@@ -42,7 +42,7 @@ class PingTest
                 continue;
             }
 
-            if (0 === strpos($iterator->getBasename(), 'pingtest2017')) {
+            if (0 === strpos($iterator->getBasename(), 'pingtest')) {
                 $date = substr($iterator->getBasename(), 8, 8);
 
                 if (new \DateTime($this->formatDateString($date)) < $startDate) {

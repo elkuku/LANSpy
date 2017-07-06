@@ -3,10 +3,19 @@
 {% block body %}
     <div class="row">
         <div class="col-xs-4">
-            <h3>Ping</h3>
-            <canvas id="pingchart-act" width="400" height="200"></canvas>
+            <h3>Pings</h3>
+            {% if pingTests[0] %}
+                <canvas id="pingchart-act" width="400" height="200"></canvas>
+            {% else %}
+                <p>No ping tests found :(</p>
+            {% endif %}
+
             <h3>Speed</h3>
-            <canvas id="speedchart-act" width="400" height="200"></canvas>
+            {% if speedTests %}
+                <canvas id="speedchart-act" width="400" height="200"></canvas>
+            {% else %}
+                <p>No speed tests found :(</p>
+            {% endif %}
         </div>
         <div class="col-xs-4 text-center">
             <img src="{{ asset('assets/img/spy.jpg') }}" class="img-responsive center-block" alt="LANSpy"/>
@@ -15,12 +24,16 @@
         </div>
         <div class="col-xs-4">
             <h3>Hosts</h3>
-            <canvas id="hostschart-act" width="400" height="200"></canvas>
-            <h4>Known: {{ hostsTests.known|first|length }}</h4>
-            <h4>Unknown: {{ hostsTests.unknown|first|length }}</h4>
+            {% if hostsTests.tests %}
+                <canvas id="hostschart-act" width="400" height="200"></canvas>
+                <h4>Known: {{ hostsTests.known|first|length }}</h4>
+                <h4>Unknown: {{ hostsTests.unknown|first|length }}</h4>
 
-            {% if hostsTests.unknown|first|length %}
-            <h4 class="alert-danger">INTRUDERS!!</h4>
+                {% if hostsTests.unknown|first|length %}
+                    <h4 class="alert-danger">INTRUDERS!!</h4>
+                {% endif %}
+            {% else %}
+                <p>No hosts tests found :(</p>
             {% endif %}
         </div>
     </div>
