@@ -13,17 +13,24 @@ class HostType extends AbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder->add('mac')->add('vendor')->add('hostname')->add('blocked')->add('name');
+        $builder
+            ->add('mac', null, ['attr' => ['readonly' => true]])
+            ->add('vendor', null, ['attr' => ['readonly' => true]])
+            ->add('hostname', null, ['required' => false, 'attr' => ['readonly' => true]])
+            ->add('name')
+            ->add('blocked');
     }
-    
+
     /**
      * {@inheritdoc}
      */
     public function configureOptions(OptionsResolver $resolver)
     {
-        $resolver->setDefaults(array(
-            'data_class' => 'AppBundle\Entity\Host'
-        ));
+        $resolver->setDefaults(
+            [
+                'data_class' => 'AppBundle\Entity\Host',
+            ]
+        );
     }
 
     /**
@@ -33,6 +40,4 @@ class HostType extends AbstractType
     {
         return 'appbundle_host';
     }
-
-
 }

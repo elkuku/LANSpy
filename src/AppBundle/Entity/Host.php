@@ -38,7 +38,7 @@ class Host implements \JsonSerializable
     private $vendor = '';
 
     /**
-     * @ORM\Column(type="string")
+     * @ORM\Column(type="string", nullable=true)
      */
     private $hostname = '';
 
