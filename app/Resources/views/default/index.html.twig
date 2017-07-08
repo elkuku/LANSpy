@@ -30,7 +30,15 @@
                 <h4>Unknown: {{ hostsTests.unknown|first|length }}</h4>
 
                 {% if hostsTests.unknown|first|length %}
-                    <h4 class="alert-danger">INTRUDERS!!</h4>
+                    <div class="alert alert-danger"><h4>INTRUSOS!!!</h4>
+                        <dl class="dl-horizontal maclist">
+                            {% for tests in hostsTests.unknown|first %}
+                                {% set mac = tests|first %}
+                                <dt>{{ mac.vendor }}</dt>
+                                <dd>{{ mac.mac }}</dd>
+                            {% endfor %}
+                        </dl>
+                    </div>
                 {% endif %}
             {% else %}
                 <p>No hosts tests found :(</p>

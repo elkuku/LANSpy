@@ -21,3 +21,7 @@ h2.current {
 span.macAddr {
     font-family: monospace;
 }
+
+dl.maclist dd {
+    font-family: monospace;
+}
