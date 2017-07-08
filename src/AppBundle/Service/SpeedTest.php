@@ -60,8 +60,8 @@ class SpeedTest
                     if ($test) {
                         $speed = new Speed();
                         $speed->setTimestamp($test->timestamp);
-                        $speed->setUpload($test->upload/1000);
-                        $speed->setDownload($test->download/1000);
+                        $speed->setUpload(ceil($test->upload / 1000));
+                        $speed->setDownload(ceil($test->download / 1000));
                         $speed->setSponsor($test->server->sponsor);
 
                         $dt = $speed->getTimestamp();
