@@ -4,15 +4,12 @@
 
 {% block body %}
     <h1>Hosts</h1>
-    <form method="post">
-        <label for="date_start">Desde : </label> <input id="date_start" name="date_start" type="date" value="{{ dateStart }}"/>
-        <label for="date_end">Hasta : </label> <input id="date_end" name="date_end" type="date" value="{{ dateEnd }}"/>
-        <button>Buscar</button>
-    </form>
+    {% include('tests/_form_date_selector.html.twig') %}
     {% for date, tests in results %}
         <h2 class="title{{ date == actDate ? ' current' : '' }}">{{ date|cDate }}</h2>
 
-        Known: {{ tests.known|length }} UnKnown: {{ tests.unknown|length }}
+        Known: {{ tests.known|length }}
+        UnKnown: {{ tests.unknown|length }}
 
         <canvas id="hostschart-{{ date }}" width="400" height="100"></canvas>
 

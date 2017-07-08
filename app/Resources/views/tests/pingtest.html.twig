@@ -4,12 +4,7 @@
 
 {% block body %}
     <h1>Pings</h1>
-    <form method="post">
-        <label for="date_start">Desde : </label> <input id="date_start" name="date_start" type="date"
-                                                        value="{{ dateStart }}"/>
-        <label for="date_end">Hasta : </label> <input id="date_end" name="date_end" type="date" value="{{ dateEnd }}"/>
-        <button>Buscar</button>
-    </form>
+    {% include('tests/_form_date_selector.html.twig') %}
     {% for date, test in tests[0] %}
         <h2 class="title{{ date == actDate ? ' current' : '' }}">{{ date|cDate }}</h2>
         <canvas id="pingchart-{{ date }}" width="400" height="100"></canvas>
