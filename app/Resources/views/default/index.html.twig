@@ -2,28 +2,28 @@
 
 {% block body %}
     <div class="row">
-        <div class="col-xs-4">
-            <h3>Pings</h3>
+        <div class="col-md-4 col-sm-4 col-sm-push-4 text-center">
+            <img src="{{ asset('assets/img/spy.jpg') }}" class="img-responsive center-block" alt="LANSpy"/>
+            <h3>{{ hostname }}</h3>
+            <h3>{{ ip }}</h3>
+        </div>
+        <div class="col-md-4 col-sm-4 col-sm-pull-4">
+            <h3><a href="{{ path('pingtest') }}">Pings</a></h3>
             {% if pingTests[0] %}
                 <canvas id="pingchart-act" width="400" height="200"></canvas>
             {% else %}
                 <p>No ping tests found :(</p>
             {% endif %}
 
-            <h3>Speed</h3>
+            <h3><a href="{{ path('speedtest') }}">Speed</a></h3>
             {% if speedTests %}
                 <canvas id="speedchart-act" width="400" height="200"></canvas>
             {% else %}
                 <p>No speed tests found :(</p>
             {% endif %}
         </div>
-        <div class="col-xs-4 text-center">
-            <img src="{{ asset('assets/img/spy.jpg') }}" class="img-responsive center-block" alt="LANSpy"/>
-            <h3>{{ hostname }}</h3>
-            <h3>{{ ip }}</h3>
-        </div>
-        <div class="col-xs-4">
-            <h3>Hosts</h3>
+        <div class="col-md-4 col-sm-4">
+            <h3><a href="{{ path('hosttest') }}">Hosts</a></h3>
             {% if hostsTests.tests %}
                 <canvas id="hostschart-act" width="400" height="200"></canvas>
                 <h4>Known: {{ hostsTests.known|first|length }}</h4>
