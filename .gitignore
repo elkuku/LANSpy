@@ -19,5 +19,6 @@
 /web/bundles/
 
 /web/assets/vendor/*
-/vendor/
 /etc/config.yml
+
+/node_modules/
