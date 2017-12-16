@@ -104,7 +104,7 @@ class ReportCommand extends ContainerAwareCommand
         $io             = new SymfonyStyle($input, $bufferedOutput);
         $hostName       = trim(shell_exec('hostname'));
         $ip             = trim(shell_exec('hostname -I'));
-        $subject = sprintf('LANSpy report from %s %s', $hostName, $ip);
+        $subject = sprintf('%d - LANSpy report from %s %s', count($macList), $hostName, $ip);
 
         $io->title($subject);
         $io->text($dateStart->format('Y-m-d H:i:s').' - '.$dateEnd->format('Y-m-d H:i:s'));
